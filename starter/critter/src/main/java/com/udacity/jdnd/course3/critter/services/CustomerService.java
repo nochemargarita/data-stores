@@ -23,8 +23,8 @@ public class CustomerService {
         return customerRepository.findCustomerByPetsContaining(pet);
     }
 
-    public Long addCustomer(Customer customer) {
-        return customerRepository.save(customer).getId();
+    public Customer addCustomer(Customer customer) {
+        return customerRepository.save(customer);
     }
 
     public Customer findById(Long id) {
