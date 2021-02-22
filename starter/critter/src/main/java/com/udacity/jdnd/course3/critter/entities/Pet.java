@@ -22,6 +22,6 @@ public class Pet {
     LocalDate birthDate;
     String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
     private Customer owner;
 }

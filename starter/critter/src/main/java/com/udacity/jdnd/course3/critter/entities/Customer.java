@@ -20,6 +20,6 @@ public class Customer {
     private String phoneNumber;
     private String notes;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", targetEntity = Pet.class, cascade = CascadeType.ALL)
     private Set<Pet> pets;
 }

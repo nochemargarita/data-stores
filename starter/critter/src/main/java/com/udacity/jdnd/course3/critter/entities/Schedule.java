@@ -14,7 +14,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table
 public class Schedule {
     @Id
     @GeneratedValue
@@ -22,10 +21,10 @@ public class Schedule {
 
     LocalDate date;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = Employee.class)
     private List<Employee> employees;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = Pet.class)
     private List<Pet> pets;
 
     @ElementCollection
