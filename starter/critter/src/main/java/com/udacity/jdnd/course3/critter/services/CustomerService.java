@@ -20,7 +20,8 @@ public class CustomerService {
     }
 
     public Customer findByPet(Pet pet) {
-        return customerRepository.findCustomerByPetsContaining(pet);
+        System.out.println(pet);
+        return customerRepository.findByPetsContaining(pet);
     }
 
     public Customer addCustomer(Customer customer) {

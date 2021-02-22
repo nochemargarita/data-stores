@@ -7,17 +7,16 @@ import com.udacity.jdnd.course3.critter.pet.PetDTO;
 import com.udacity.jdnd.course3.critter.services.CustomerService;
 import com.udacity.jdnd.course3.critter.services.EmployeeService;
 import com.udacity.jdnd.course3.critter.services.PetService;
+import org.hibernate.annotations.Type;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Handles web requests related to Users.
@@ -101,6 +100,21 @@ public class UserController {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
 
+        Set<Pet> petsAssociated = customer.getPets();
+
+        ModelMapper modelMapper = new ModelMapper();
+
+        if(petsAssociated != null && petsAssociated.size() > 0) {
+            List<Long> petIds = new ArrayList<Long>();
+            customer.getPets().forEach(pet -> {
+                petIds.add(pet.getId());
+            });
+
+            List<Long> destination = new ArrayList<Long>();
+            modelMapper.map(petIds, destination);
+
+            customerDTO.setPetIds(petIds);
+        }
         return customerDTO;
     }
 

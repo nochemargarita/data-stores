@@ -11,17 +11,16 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Pet {
     @Id
     @GeneratedValue
-    Long id;
+    long id;
 
     PetType type;
     String name;
     LocalDate birthDate;
     String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class, optional = false)
     private Customer owner;
 }

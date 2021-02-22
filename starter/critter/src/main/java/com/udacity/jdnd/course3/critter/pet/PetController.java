@@ -35,7 +35,7 @@ public class PetController {
     }
 
     private Pet convertPetDTOToEntity(PetDTO petDTO) {
-        Customer owner = customerService.findById(petDTO.getId());
+        Customer owner = customerService.findById(petDTO.getOwnerId());
 
         Pet pet = new Pet();
         BeanUtils.copyProperties(petDTO, pet);
@@ -77,7 +77,7 @@ public class PetController {
     }
 
     @GetMapping("/owner/{ownerId}")
-    public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
+    public List<PetDTO> getPetsByOwner(@PathVariable Long ownerId) {
        List<Pet> pets = petService.getPetsByOwner(ownerId);
 
        return listToDTO(pets);

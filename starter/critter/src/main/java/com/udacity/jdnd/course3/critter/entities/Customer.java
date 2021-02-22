@@ -10,11 +10,10 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Customer {
     @Id
     @GeneratedValue
-    Long id;
+    long id;
 
     private String name;
     private String phoneNumber;

@@ -12,11 +12,10 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Employee {
     @Id
     @GeneratedValue
-    Long id;
+    long id;
 
     private String name;
 

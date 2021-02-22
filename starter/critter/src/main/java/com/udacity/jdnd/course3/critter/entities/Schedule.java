@@ -13,11 +13,10 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Schedule {
     @Id
     @GeneratedValue
-    Long id;
+    long id;
 
     LocalDate date;
 
