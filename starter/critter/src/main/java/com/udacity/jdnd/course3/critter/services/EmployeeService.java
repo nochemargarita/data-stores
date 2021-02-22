@@ -32,10 +32,18 @@ public class EmployeeService {
         return employeeRepository.findById(id).get();
     }
 
-    public List<Employee> getAvailableEmployees(LocalDate date, HashSet<EmployeeSkill> skills) {
-        List<Employee> availableEmployees =
-                employeeRepository.findEmployeeByAvailabilityAndSkills(date.getDayOfWeek(), skills);
+    public Set<Employee> getAvailableEmployees(LocalDate date, HashSet<EmployeeSkill> skills) {
+        Set<Employee> availableEmployees =
+                employeeRepository.findEmployeeByAvailability(date.getDayOfWeek());
+        Set<Employee> employeesWithMatchSkills = new HashSet<Employee>();
 
-        return availableEmployees;
+        availableEmployees.forEach(employee -> {
+            Boolean matched = employee.getSkills().containsAll(skills);
+            if (matched) {
+                employeesWithMatchSkills.add(employee);
+            }
+        });
+
+        return employeesWithMatchSkills;
     }
 }

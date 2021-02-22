@@ -85,8 +85,8 @@ public class UserController {
         LocalDate date = employeeDTO.getDate();
         HashSet<EmployeeSkill> skills = new HashSet<EmployeeSkill>(employeeDTO.getSkills());
 
-        List<Employee> availableEmployees = employeeService.getAvailableEmployees(date, skills);
-        return employeeListToDTO(availableEmployees);
+        Set<Employee> availableEmployees = employeeService.getAvailableEmployees(date, skills);
+        return employeeSetToDTO(availableEmployees);
     }
 
     // Customer DTOs
@@ -128,6 +128,14 @@ public class UserController {
     }
 
     private List<EmployeeDTO> employeeListToDTO(List<Employee> employees) {
+        ModelMapper modelMapper = new ModelMapper();
+        List<EmployeeDTO> employeeDTOList =
+                Arrays.asList(modelMapper.map(employees, EmployeeDTO[].class));
+
+        return employeeDTOList;
+    }
+
+    private List<EmployeeDTO> employeeSetToDTO(Set<Employee> employees) {
         ModelMapper modelMapper = new ModelMapper();
         List<EmployeeDTO> employeeDTOList =
                 Arrays.asList(modelMapper.map(employees, EmployeeDTO[].class));
