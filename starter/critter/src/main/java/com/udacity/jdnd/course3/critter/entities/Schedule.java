@@ -16,9 +16,9 @@ import java.util.Set;
 public class Schedule {
     @Id
     @GeneratedValue
-    long id;
+    private long id;
 
-    LocalDate date;
+    private LocalDate date;
 
     @ManyToMany(targetEntity = Employee.class)
     private List<Employee> employees;

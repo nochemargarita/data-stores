@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,13 +15,16 @@ import java.time.LocalDate;
 public class Pet {
     @Id
     @GeneratedValue
-    long id;
+    private long id;
 
-    PetType type;
-    String name;
-    LocalDate birthDate;
-    String notes;
+    private PetType type;
+    private String name;
+    private LocalDate birthDate;
+    private String notes;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class, optional = false)
     private Customer owner;
+
+    @ManyToMany(targetEntity = Schedule.class)
+    private List<Schedule> schedules;
 }
