@@ -100,21 +100,21 @@ public class UserController {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
 
-        Set<Pet> petsAssociated = customer.getPets();
+        List<Long> petsAssociated = new ArrayList<>();
 
         ModelMapper modelMapper = new ModelMapper();
 
-        if(petsAssociated != null && petsAssociated.size() > 0) {
-            List<Long> petIds = new ArrayList<Long>();
+        if(customer.getPets() != null) {
             customer.getPets().forEach(pet -> {
-                petIds.add(pet.getId());
+                petsAssociated.add(pet.getId());
             });
 
-            List<Long> destination = new ArrayList<Long>();
-            modelMapper.map(petIds, destination);
+            Set<Long> destination = new HashSet<>();
 
-            customerDTO.setPetIds(petIds);
+            modelMapper.map(petsAssociated, destination);
         }
+
+        customerDTO.setPetIds(petsAssociated);
         return customerDTO;
     }
 

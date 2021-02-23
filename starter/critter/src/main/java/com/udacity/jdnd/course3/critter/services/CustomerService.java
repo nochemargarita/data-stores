@@ -20,7 +20,6 @@ public class CustomerService {
     }
 
     public Customer findByPet(Pet pet) {
-        System.out.println(pet);
         return customerRepository.findByPetsContaining(pet);
     }
 

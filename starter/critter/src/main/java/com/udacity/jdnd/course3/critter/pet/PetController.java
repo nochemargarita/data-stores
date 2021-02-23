@@ -2,6 +2,7 @@ package com.udacity.jdnd.course3.critter.pet;
 
 import com.udacity.jdnd.course3.critter.entities.Customer;
 import com.udacity.jdnd.course3.critter.entities.Pet;
+import com.udacity.jdnd.course3.critter.repositories.CustomerRepository;
 import com.udacity.jdnd.course3.critter.services.CustomerService;
 import com.udacity.jdnd.course3.critter.services.PetService;
 import org.modelmapper.ModelMapper;
@@ -26,37 +27,27 @@ public class PetController {
     @Autowired
     CustomerService customerService;
 
+    @Autowired
+    CustomerRepository customerRepository;
+
+    // reference: https://knowledge.udacity.com/questions/430058
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
-        Pet pet = convertPetDTOToEntity(petDTO);
-        Pet newAddedPet = petService.addPet(pet);
+        Customer customer = null;
 
-        return convertEntityToPetDTO(newAddedPet);
-    }
-
-    private Pet convertPetDTOToEntity(PetDTO petDTO) {
-        Customer owner = customerService.findById(petDTO.getOwnerId());
-
-        Pet pet = new Pet();
-        BeanUtils.copyProperties(petDTO, pet);
-        pet.setOwner(owner);
-
-        Set<Pet> petsOwner = owner.getPets();
-
-        if (petsOwner == null) {
-            Set<Pet> newPetForOwner = new HashSet<Pet>();
-
-            newPetForOwner.add(pet);
-            owner.setPets(newPetForOwner);
-        } else {
-            petsOwner.add(pet);
-            owner.setPets(petsOwner);
+        if ((Long) petDTO.getOwnerId() != null) { // returns true all the time
+            customer = customerRepository.getOne(petDTO.getOwnerId());
         }
-        return pet;
+
+        Pet petToSave = convertDtoToPetEntity(petDTO);
+        petToSave.setOwner(customer);
+        Pet petSaved = petService.addPet(petToSave);
+
+        return convertPetEntityToDto(petSaved);
     }
 
     @GetMapping("/{petId}")
-    public PetDTO getPet(@PathVariable Long petId) {
+    public PetDTO getPet(@PathVariable long petId) {
         Pet pet = petService.getPet(petId);
 
         return convertEntityToPetDTO(pet);
@@ -77,10 +68,25 @@ public class PetController {
     }
 
     @GetMapping("/owner/{ownerId}")
-    public List<PetDTO> getPetsByOwner(@PathVariable Long ownerId) {
+    public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
        List<Pet> pets = petService.getPetsByOwner(ownerId);
 
        return listToDTO(pets);
+    }
+
+    // DTOs
+    public Pet convertDtoToPetEntity(PetDTO petDTO){
+        Pet pet = new Pet();
+        BeanUtils.copyProperties(petDTO, pet);
+        return pet;
+    }
+
+    public PetDTO convertPetEntityToDto(Pet pet){
+        PetDTO dto = new PetDTO();
+        BeanUtils.copyProperties(pet, dto);
+
+        dto.setOwnerId(pet.getOwner().getId());
+        return dto;
     }
 
     private List<PetDTO> listToDTO(List<Pet> pets) {

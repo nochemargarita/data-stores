@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,4 +22,12 @@ public class Customer {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", targetEntity = Pet.class, cascade = CascadeType.ALL)
     private Set<Pet> pets;
+
+    public void addPet(Pet pet) {
+        if (pets == null) {
+            pets = new HashSet<>();
+        }
+
+        pets.add(pet);
+    }
 }
