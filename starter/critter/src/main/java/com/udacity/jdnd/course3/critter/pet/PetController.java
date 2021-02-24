@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Handles web requests related to Pets.
@@ -33,14 +31,11 @@ public class PetController {
     // reference: https://knowledge.udacity.com/questions/430058
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
-        Customer customer = null;
-
-        if ((Long) petDTO.getOwnerId() != null) { // returns true all the time
-            customer = customerRepository.getOne(petDTO.getOwnerId());
-        }
-
+        Customer owner = customerService.findById(petDTO.getOwnerId());
         Pet petToSave = convertDtoToPetEntity(petDTO);
-        petToSave.setOwner(customer);
+
+        petToSave.setOwner(owner);
+
         Pet petSaved = petService.addPet(petToSave);
 
         return convertPetEntityToDto(petSaved);
@@ -57,6 +52,7 @@ public class PetController {
         PetDTO petDTO = new PetDTO();
         BeanUtils.copyProperties(pet, petDTO);
 
+        petDTO.setOwnerId(pet.getOwner().getId());
         return petDTO;
     }
 
@@ -78,6 +74,7 @@ public class PetController {
     public Pet convertDtoToPetEntity(PetDTO petDTO){
         Pet pet = new Pet();
         BeanUtils.copyProperties(petDTO, pet);
+
         return pet;
     }
 

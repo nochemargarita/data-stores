@@ -7,6 +7,7 @@ import com.udacity.jdnd.course3.critter.pet.PetDTO;
 import com.udacity.jdnd.course3.critter.services.CustomerService;
 import com.udacity.jdnd.course3.critter.services.EmployeeService;
 import com.udacity.jdnd.course3.critter.services.PetService;
+import org.assertj.core.util.Sets;
 import org.hibernate.annotations.Type;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -93,6 +94,12 @@ public class UserController {
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDTO, customer);
 
+        List<Long> petIds = customerDTO.getPetIds();
+        if (petIds != null) {
+            List<Pet> pets = petService.getAllPetsByIds(petIds);
+
+            customer.setPets(Sets.newHashSet(pets));
+        }
         return  customer;
     }
 
@@ -119,11 +126,13 @@ public class UserController {
     }
 
     private List<CustomerDTO> customerListToDTO(List<Customer> customers) {
-        ModelMapper modelMapper = new ModelMapper();
-        List<CustomerDTO> customerDTOList =
-                Arrays.asList(modelMapper.map(customers, CustomerDTO[].class));
-
-        return customerDTOList;
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+        if (customers != null) {
+            for(Customer customer : customers) {
+                customerDTOS.add(convertCustomerEntityToDTO(customer));
+            }
+        }
+        return customerDTOS;
     }
 
     // Employee DTOs
