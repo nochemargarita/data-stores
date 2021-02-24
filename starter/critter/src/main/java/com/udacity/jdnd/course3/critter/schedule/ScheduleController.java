@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Schedules.
@@ -49,14 +51,14 @@ public class ScheduleController {
     public List<ScheduleDTO> getAllSchedules() {
         List<Schedule> schedules = scheduleService.getSchedules();
 
-        return scheduleListToDTO(schedules);
+        return schedules.stream().map(this::convertScheduleEntityToDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
         List<Schedule> schedules = scheduleService.getScheduleForPet(petId);
 
-        return scheduleListToDTO(schedules);
+        return  schedules.stream().map(this::convertScheduleEntityToDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/employee/{employeeId}")
@@ -97,9 +99,19 @@ public class ScheduleController {
         return  schedule;
     }
 
-    private static ScheduleDTO convertScheduleEntityToDTO(Schedule schedule) {
+    private ScheduleDTO convertScheduleEntityToDTO(Schedule schedule) {
         ScheduleDTO scheduleDTO = new ScheduleDTO();
         BeanUtils.copyProperties(schedule, scheduleDTO);
+
+        List<Long> petIds = new ArrayList<>();
+        List<Long> employeeIds = new ArrayList<>();
+
+        // Copy over other properties
+        schedule.getPets().forEach(pet -> petIds.add(pet.getId()));
+        schedule.getEmployees().forEach(employee -> employeeIds.add(employee.getId()));
+
+        scheduleDTO.setPetIds(petIds);
+        scheduleDTO.setEmployeeIds(employeeIds);
 
         return scheduleDTO;
     }
@@ -108,7 +120,7 @@ public class ScheduleController {
         ModelMapper modelMapper = new ModelMapper();
         List<ScheduleDTO> scheduleDTOList =
                 Arrays.asList(modelMapper.map(schedules, ScheduleDTO[].class));
-        System.out.println(scheduleDTOList);
+
         return scheduleDTOList;
     }
 }
