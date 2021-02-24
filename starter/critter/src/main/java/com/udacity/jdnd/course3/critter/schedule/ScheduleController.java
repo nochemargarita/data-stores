@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,16 +54,14 @@ public class ScheduleController {
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        Pet pet = petService.getPet(petId);
-        List<Schedule> schedules = scheduleService.getScheduleForPet(pet);
+        List<Schedule> schedules = scheduleService.getScheduleForPet(petId);
 
         return scheduleListToDTO(schedules);
     }
 
     @GetMapping("/employee/{employeeId}")
     public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
-        Employee employee = employeeService.getEmployee(employeeId);
-        List<Schedule> schedules = scheduleService.getScheduleForEmployee(employee);
+        List<Schedule> schedules = scheduleService.getScheduleForEmployee(employeeId);
 
         return scheduleListToDTO(schedules);
     }
@@ -80,6 +79,21 @@ public class ScheduleController {
         Schedule schedule = new Schedule();
         BeanUtils.copyProperties(scheduleDTO, schedule);
 
+        List<Pet> pets = new ArrayList<>();
+        for (long petId : scheduleDTO.getPetIds()) {
+            pets.add(petService.getPet(petId));
+        }
+
+        List<Employee> employees = new ArrayList<>();
+        for(long employeeId : scheduleDTO.getEmployeeIds()) {
+            employees.add(employeeService.getEmployee(employeeId));
+        }
+
+        //copy over properties
+        schedule.setActivities(scheduleDTO.getActivities());
+        schedule.setPets(pets);
+        schedule.setEmployees(employees);
+
         return  schedule;
     }
 
@@ -94,7 +108,7 @@ public class ScheduleController {
         ModelMapper modelMapper = new ModelMapper();
         List<ScheduleDTO> scheduleDTOList =
                 Arrays.asList(modelMapper.map(schedules, ScheduleDTO[].class));
-
+        System.out.println(scheduleDTOList);
         return scheduleDTOList;
     }
 }

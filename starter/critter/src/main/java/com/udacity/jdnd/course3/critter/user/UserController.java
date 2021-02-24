@@ -147,6 +147,8 @@ public class UserController {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         BeanUtils.copyProperties(employee, employeeDTO);
 
+        employeeDTO.setDaysAvailable(employee.getAvailability());
+
         return employeeDTO;
     }
 
