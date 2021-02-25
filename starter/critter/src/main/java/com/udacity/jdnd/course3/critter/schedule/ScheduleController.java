@@ -65,7 +65,7 @@ public class ScheduleController {
     public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
         List<Schedule> schedules = scheduleService.getScheduleForEmployee(employeeId);
 
-        return scheduleListToDTO(schedules);
+        return schedules.stream().map(this::convertScheduleEntityToDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/customer/{customerId}")
@@ -73,7 +73,7 @@ public class ScheduleController {
         Customer customer = customerService.findById(customerId);
         List<Schedule> schedules = scheduleService.getScheduleForCustomer(customer);
 
-        return scheduleListToDTO(schedules);
+        return schedules.stream().map(this::convertScheduleEntityToDTO).collect(Collectors.toList());
     }
 
     // DTOs

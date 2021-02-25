@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,14 +50,14 @@ public class ScheduleService {
 
     public List<Schedule> getScheduleForCustomer(Customer customer) {
         Set<Pet> pets = customer.getPets();
-        Set<Schedule> schedules = new HashSet<>();
+        List<Schedule> schedules = new ArrayList<>();
 
         pets.forEach(pet -> {
             List<Schedule> scheduledPets = scheduleRepository.getSchedulesByPetsContains(pet);
             // bulk add
             schedules.addAll(scheduledPets);
         });
-        System.out.println(pets);
-        return (List<Schedule>) schedules;
+
+        return schedules;
     }
 }
