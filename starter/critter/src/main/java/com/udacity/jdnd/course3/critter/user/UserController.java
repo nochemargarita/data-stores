@@ -3,14 +3,11 @@ package com.udacity.jdnd.course3.critter.user;
 import com.udacity.jdnd.course3.critter.entities.Customer;
 import com.udacity.jdnd.course3.critter.entities.Employee;
 import com.udacity.jdnd.course3.critter.entities.Pet;
-import com.udacity.jdnd.course3.critter.pet.PetDTO;
 import com.udacity.jdnd.course3.critter.services.CustomerService;
 import com.udacity.jdnd.course3.critter.services.EmployeeService;
 import com.udacity.jdnd.course3.critter.services.PetService;
 import org.assertj.core.util.Sets;
-import org.hibernate.annotations.Type;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -83,7 +80,7 @@ public class UserController {
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         LocalDate date = employeeDTO.getDate();
-        HashSet<EmployeeSkill> skills = new HashSet<EmployeeSkill>(employeeDTO.getSkills());
+        HashSet<EmployeeSkill> skills = new HashSet<>(employeeDTO.getSkills());
 
         Set<Employee> availableEmployees = employeeService.getAvailableEmployees(date, skills);
         return employeeSetToDTO(availableEmployees);
@@ -154,19 +151,9 @@ public class UserController {
         return employeeDTO;
     }
 
-    private List<EmployeeDTO> employeeListToDTO(List<Employee> employees) {
-        ModelMapper modelMapper = new ModelMapper();
-        List<EmployeeDTO> employeeDTOList =
-                Arrays.asList(modelMapper.map(employees, EmployeeDTO[].class));
-
-        return employeeDTOList;
-    }
-
     private List<EmployeeDTO> employeeSetToDTO(Set<Employee> employees) {
         ModelMapper modelMapper = new ModelMapper();
-        List<EmployeeDTO> employeeDTOList =
-                Arrays.asList(modelMapper.map(employees, EmployeeDTO[].class));
 
-        return employeeDTOList;
+        return Arrays.asList(modelMapper.map(employees, EmployeeDTO[].class));
     }
 }

@@ -8,17 +8,13 @@ import com.udacity.jdnd.course3.critter.services.CustomerService;
 import com.udacity.jdnd.course3.critter.services.EmployeeService;
 import com.udacity.jdnd.course3.critter.services.PetService;
 import com.udacity.jdnd.course3.critter.services.ScheduleService;
-import com.udacity.jdnd.course3.critter.user.CustomerDTO;
-import org.checkerframework.checker.units.qual.A;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -114,13 +110,5 @@ public class ScheduleController {
         scheduleDTO.setEmployeeIds(employeeIds);
 
         return scheduleDTO;
-    }
-
-    private List<ScheduleDTO> scheduleListToDTO(List<Schedule> schedules) {
-        ModelMapper modelMapper = new ModelMapper();
-        List<ScheduleDTO> scheduleDTOList =
-                Arrays.asList(modelMapper.map(schedules, ScheduleDTO[].class));
-
-        return scheduleDTOList;
     }
 }

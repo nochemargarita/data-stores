@@ -10,5 +10,5 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-    public Customer findByPetsContaining(Pet pet);
+    Customer findByPetsContaining(Pet pet);
 }

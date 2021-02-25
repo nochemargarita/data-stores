@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -35,10 +34,10 @@ public class EmployeeService {
     public Set<Employee> getAvailableEmployees(LocalDate date, HashSet<EmployeeSkill> skills) {
         Set<Employee> availableEmployees =
                 employeeRepository.findEmployeeByAvailability(date.getDayOfWeek());
-        Set<Employee> employeesWithMatchSkills = new HashSet<Employee>();
+        Set<Employee> employeesWithMatchSkills = new HashSet<>();
 
         availableEmployees.forEach(employee -> {
-            Boolean matched = employee.getSkills().containsAll(skills);
+            boolean matched = employee.getSkills().containsAll(skills);
             if (matched) {
                 employeesWithMatchSkills.add(employee);
             }

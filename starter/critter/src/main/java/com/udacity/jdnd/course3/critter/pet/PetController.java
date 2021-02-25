@@ -88,8 +88,7 @@ public class PetController {
 
     private List<PetDTO> listToDTO(List<Pet> pets) {
         ModelMapper modelMapper = new ModelMapper();
-        List<PetDTO> petDTOList = Arrays.asList(modelMapper.map(pets, PetDTO[].class));
 
-        return petDTOList;
+        return Arrays.asList(modelMapper.map(pets, PetDTO[].class));
     }
 }
